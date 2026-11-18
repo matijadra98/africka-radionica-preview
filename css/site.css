@@ -422,3 +422,9 @@ legend{font-weight:500;margin-bottom:12px;color:var(--ink)}
 .price-in input:focus{outline:none;border-bottom-color:var(--ebony)}
 .price-in .cur{font-size:.9rem;color:var(--muted);padding-bottom:7px}
 .fg-price{border-bottom:1px solid var(--line)}
+
+/* Naslovi stranica (kategorija, atelje, kontakt): manji i bliže proizvodima (korisnik 18.11.: „ogromni i nepotrebni“) */
+.phead{padding:clamp(34px,4vw,56px) 0 clamp(20px,2.4vw,32px)}
+.phead h1{font-size:clamp(1.9rem,3vw,2.6rem);line-height:1.1;letter-spacing:0}
+.phead p{margin-top:12px;font-size:1rem}
+.phead .crumbs{margin-bottom:12px;font-size:.85rem}
