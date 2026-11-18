@@ -348,12 +348,13 @@ legend{font-weight:500;margin-bottom:12px;color:var(--ink)}
   .cats{display:none;position:fixed;left:0;right:0;top:66px;bottom:0;background:var(--ivory);color:var(--ink);overflow:auto;padding:12px var(--gut) 40px;border-top:1px solid var(--line)}
   .cats.open{display:block}
   .cats-main{display:block;padding:0}
-  .cats-main > li > a,.cats-mob a,.more-list a{display:block;padding:12px 0;font-family:var(--serif);font-size:1.45rem;border-bottom:1px solid var(--line);text-decoration:none}
+  /* Meni na telefonu: font kao Zara (Helvetica Now Text je plaćen, pa ugrađena Helvetica) */
+  .cats-main > li > a,.cats-mob a,.more-list a{display:block;padding:14px 0;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:1rem;font-weight:400;letter-spacing:0;border-bottom:1px solid var(--line);text-decoration:none}
   .more-btn{display:none}
   .more-list{display:block;position:static;border:0;box-shadow:none;padding:0;min-width:0;background:none}
   .more-list a:hover{background:none}
   .cats-mob{display:block;list-style:none;margin:28px 0 0;padding:0}
-  .cats-mob a{font-family:var(--sans);font-size:1.05rem}
+  .cats-mob a{color:var(--muted,#6b6155)}
   .cat-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
   .ctile span{font-size:1.2rem}
 }

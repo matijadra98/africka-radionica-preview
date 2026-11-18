@@ -1,24 +1,24 @@
 // Kategorije istim redom i pod istim imenima kao u meniju sadašnjeg sajta.
-// m = modeli (podkategorije sa sadašnjeg sajta). md/t/d = model, tkanina, dostupnost (primer za filter).
+// m = modeli (podkategorije sa sadašnjeg sajta). f = filteri koje sadašnji sajt prikazuje u toj kategoriji (18.11.2026). md/t/d = model, tkanina, dostupnost (primer za filter).
 // Proizvodi su primeri sa sajta (naziv, cena, slika); raspored po kategorijama je primer za mockup.
 window.KAT = [
-  { k: 'poslednji-komadi', n: 'Poslednji komadi', o: 'Poslednji komadi u svom dezenu. Kad nestanu, ne ponavljaju se.' , m: [] },
-  { k: 'swara-man', n: 'Swara man', o: 'Muška kolekcija iz istog ateljea.' , m: ["Pantalone", "Jakna Kinyonga", "Kimono", "Duks jakne", "Košulje", "Duks sa kapuljačom", "Dodaci", "Jakne", "Cargo pantalone unisex"] },
-  { k: 'bluze-tunike-kardigani', n: 'Bluze, tunike i kardigani', o: 'Boho krojevi od prirodnih materijala, i za punije figure.' , m: ["Sankofa", "Tea", "Eclipse", "Lanene i pamučne bluzice", "Kaftani", "Bluze od kašira", "Dune", "Tsavo", "Tunike od lan gaze", "Mavuno", "Košulje", "Toskana"] },
-  { k: 'haljine-pamucne', n: 'Haljine pamučne', o: 'Afrički pamuk sa autentičnim printovima, po meri ili prema tabeli veličina.' , m: ["Haljine na preklop", "Lea", "Gulshan", "Kami", "Grejs", "Fidži", "Zaidi", "Salome", "Emily", "Kubwa", "Rolka", "Luyando"] },
-  { k: 'haljine-lanene', n: 'Haljine lanene', o: 'Čist lan za leto: lagan, prozračan i udoban.' , m: ["Sulla", "Botanica", "Kaftani", "Mala lanena haljina", "Durmita", "Safari", "Nomad", "Amara", "Sahara Muse", "Košulja haljina", "Kimono haljina", "Mirelle", "Malaika"] },
-  { k: 'haljine-svilene', n: 'Haljine svilene', o: 'Svilene mešavine za posebne prilike i putovanja.' , m: ["Celestine", "Noa", "Magna", "Duge svilene haljine", "Svilena haljina na preklop"] },
-  { k: 'kombinezoni', n: 'Kombinezoni', o: 'Od lana ili afričkog pamuka, u velikom izboru modela i dezena.' , m: ["Blaze", "Helena", "Monako", "Fluid"] },
-  { k: 'nakit', n: 'Nakit', o: 'Ručni rad iz okolnih plemena i ženskih udruženja.' , m: ["Narukvice", "Nomadski nakit", "Nanogice", "Minđuše", "Prstenje", "Masai ogrlice od perlica", "Privesci od srebra"] },
-  { k: 'pantalone-lanene', n: 'Pantalone lanene', o: 'Svedene lanene pantalone za leto.' , m: ["Kink Street", "Linea", "Palazzo", "Cargo od lana"] },
-  { k: 'pantalone-pamucne', n: 'Pantalone pamučne', o: 'Pamučne pantalone sa afričkim printom.' , m: ["City", "Palazzo", "Marion", "Wrap Theory"] },
-  { k: 'pantalone-svilene', n: 'Pantalone svilene', o: 'Lepršave svilene pantalone.' , m: ["City", "Palazzo"] },
-  { k: 'poklon-ideje', n: 'Poklon ideje', o: 'Pokloni koji dolaze sa ekvatora.' , m: ["Podmetači", "Ukrasne korpe", "Poklon kartice", "Slike", "Prirodna kozmetika", "Kikoyi", "Neseseri", "Kaiševi", "Ešarpe", "Maske, statue i drveni predmeti", "Ukrasni jastučići"] },
-  { k: 'sakoi-mantili', n: 'Sakoi i mantili', o: 'Šiveni u Keniji, od 100% pamučnih tkanina.' , m: ["Sako Rahizi Easy", "Sako Lela", "Mantili dugi i kratki", "Duks jakne za žene", "Pelerina sako"] },
-  { k: 'suknje', n: 'Suknje', o: 'Kratke i duge suknje od pamuka i lana.' , m: ["Peni", "Suknje na preklop", "Kargo", "Karibi", "Balon suknja", "Jessica", "Kratke suknje"] },
-  { k: 'tkanine', n: 'Tkanine', o: 'Izaberite tkaninu za svoj model.' , m: ["Batik", "Svila", "Viskoze", "Tkanine u Srbiji", "Lan", "Češljani pamuk"] },
-  { k: 'torbe-cegeri', n: 'Torbe i cegeri', o: 'Ručno pleteni cegeri i torbe.' , m: ["Cegeri Swara", "Neseseri", "Tašne od prirodnog vlakna"] },
-  { k: 'obuca', n: 'Obuća', o: 'Japanke i sandale sa perlicama, ručni rad.' }
+  { k: 'poslednji-komadi', n: 'Poslednji komadi', o: 'Poslednji komadi u svom dezenu. Kad nestanu, ne ponavljaju se.' , m: [], f: ["Veličina", "Duzina haljine", "Duzina suknje", "Duzina kosulje", "Oznake"] },
+  { k: 'swara-man', n: 'Swara man', o: 'Muška kolekcija iz istog ateljea.' , m: ["Pantalone", "Jakna Kinyonga", "Kimono", "Duks jakne", "Košulje", "Duks sa kapuljačom", "Dodaci", "Jakne", "Cargo pantalone unisex"], f: ["Veličina", "Duzina pantalona", "Duzina jakne", "Duzina kosulje", "Oznake"] },
+  { k: 'bluze-tunike-kardigani', n: 'Bluze, tunike i kardigani', o: 'Boho krojevi od prirodnih materijala, i za punije figure.' , m: ["Sankofa", "Tea", "Eclipse", "Lanene i pamučne bluzice", "Kaftani", "Bluze od kašira", "Dune", "Tsavo", "Tunike od lan gaze", "Mavuno", "Košulje", "Toskana"], f: ["Boja", "Veličina", "Duzina", "Duzina haljine", "Duzina kosulje", "Rukav", "Oznake"] },
+  { k: 'haljine-pamucne', n: 'Haljine pamučne', o: 'Afrički pamuk sa autentičnim printovima, po meri ili prema tabeli veličina.' , m: ["Haljine na preklop", "Lea", "Gulshan", "Kami", "Grejs", "Fidži", "Zaidi", "Salome", "Emily", "Kubwa", "Rolka", "Luyando"], f: ["Veličina", "Duzina haljine", "Duzina rukava", "Dužina", "Rukav", "Oznake"] },
+  { k: 'haljine-lanene', n: 'Haljine lanene', o: 'Čist lan za leto: lagan, prozračan i udoban.' , m: ["Sulla", "Botanica", "Kaftani", "Mala lanena haljina", "Durmita", "Safari", "Nomad", "Amara", "Sahara Muse", "Košulja haljina", "Kimono haljina", "Mirelle", "Malaika"], f: ["Veličina", "Duzina haljine", "Duzina kosulje", "Negliže", "Oznake"] },
+  { k: 'haljine-svilene', n: 'Haljine svilene', o: 'Svilene mešavine za posebne prilike i putovanja.' , m: ["Celestine", "Noa", "Magna", "Duge svilene haljine", "Svilena haljina na preklop"], f: ["Veličina", "Duzina haljine", "Duzina suknje", "Oznake"] },
+  { k: 'kombinezoni', n: 'Kombinezoni', o: 'Od lana ili afričkog pamuka, u velikom izboru modela i dezena.' , m: ["Blaze", "Helena", "Monako", "Fluid"], f: ["Veličina", "Duzina kombinezona", "Duzina haljine", "Oznake"] },
+  { k: 'nakit', n: 'Nakit', o: 'Ručni rad iz okolnih plemena i ženskih udruženja.' , m: ["Narukvice", "Nomadski nakit", "Nanogice", "Minđuše", "Prstenje", "Masai ogrlice od perlica", "Privesci od srebra"], f: ["Boja", "Oznake"] },
+  { k: 'pantalone-lanene', n: 'Pantalone lanene', o: 'Svedene lanene pantalone za leto.' , m: ["Kink Street", "Linea", "Palazzo", "Cargo od lana"], f: ["Boja", "Veličina", "Duzina pantalona", "Oznake"] },
+  { k: 'pantalone-pamucne', n: 'Pantalone pamučne', o: 'Pamučne pantalone sa afričkim printom.' , m: ["City", "Palazzo", "Marion", "Wrap Theory"], f: ["Veličina", "Duzina pantalona", "Duzina suknje", "Oznake"] },
+  { k: 'pantalone-svilene', n: 'Pantalone svilene', o: 'Lepršave svilene pantalone.' , m: ["City", "Palazzo"], f: ["Veličina", "Duzina haljine", "Duzina pantalona", "Oznake"] },
+  { k: 'poklon-ideje', n: 'Poklon ideje', o: 'Pokloni koji dolaze sa ekvatora.' , m: ["Podmetači", "Ukrasne korpe", "Poklon kartice", "Slike", "Prirodna kozmetika", "Kikoyi", "Neseseri", "Kaiševi", "Ešarpe", "Maske, statue i drveni predmeti", "Ukrasni jastučići"], f: ["Gramaza", "Oznake"] },
+  { k: 'sakoi-mantili', n: 'Sakoi i mantili', o: 'Šiveni u Keniji, od 100% pamučnih tkanina.' , m: ["Sako Rahizi Easy", "Sako Lela", "Mantili dugi i kratki", "Duks jakne za žene", "Pelerina sako"], f: ["Veličina", "Duzina", "Duzina haljine", "Duzina jakne", "Duzina mantila", "Oznake"] },
+  { k: 'suknje', n: 'Suknje', o: 'Kratke i duge suknje od pamuka i lana.' , m: ["Peni", "Suknje na preklop", "Kargo", "Karibi", "Balon suknja", "Jessica", "Kratke suknje"], f: ["Veličina", "Duzina suknje", "Dužina", "Oznake"] },
+  { k: 'tkanine', n: 'Tkanine', o: 'Izaberite tkaninu za svoj model.' , m: ["Batik", "Svila", "Viskoze", "Tkanine u Srbiji", "Lan", "Češljani pamuk"], f: ["Veličina", "Duzina kosulje", "Oznake"] },
+  { k: 'torbe-cegeri', n: 'Torbe i cegeri', o: 'Ručno pleteni cegeri i torbe.' , m: ["Cegeri Swara", "Neseseri", "Tašne od prirodnog vlakna"], f: ["Tip torbe", "Oznake"] },
+  { k: 'obuca', n: 'Obuća', o: 'Japanke i sandale sa perlicama, ručni rad.', f: ["Veličina obuce", "Oznake"] }
 ];
 
 window.PROIZVODI = [

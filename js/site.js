@@ -81,8 +81,10 @@
     var DOST = [['stanje', 'Na stanju, isporuka 2–3 dana'], ['porudzbina', 'Po porudžbini, oko 3 nedelje']];
     var ATR = window.ATR || [];
     var atrBox = document.getElementById('fg-atr');
+    // Samo filteri koje ta kategorija ima (kao na sadašnjem sajtu); bez kategorije svi
+    var vis = function (x) { return !(kat && kat.f) || kat.f.indexOf(x.g) > -1; };
     atrBox.innerHTML = ATR.map(function (x, i) {
-      return '<details class="fg fgd"><summary>' + x.g + '</summary><div class="fg-list" data-name="a' + i + '"></div></details>';
+      return vis(x) ? '<details class="fg fgd"><summary>' + x.g + '</summary><div class="fg-list" data-name="a' + i + '"></div></details>' : '';
     }).join('');
     var models = kat && kat.m && kat.m.length ? kat.m : [];
     if (!models.length) document.getElementById('fg-model').hidden = true;
@@ -92,6 +94,7 @@
     };
     var lists = { md: document.querySelector('#fg-model .fg-list'), d: document.querySelector('[data-name="d"]') };
     ATR.forEach(function (x, i) {
+      if (!vis(x)) return;
       groups['a' + i] = x.v.map(function (v) { return [v, v, function (p) { return !!(p.a && p.a[x.g] && p.a[x.g].indexOf(v) > -1); }]; });
       lists['a' + i] = atrBox.querySelector('[data-name="a' + i + '"]');
     });
