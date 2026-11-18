@@ -46,6 +46,23 @@
   // Nazivi atributa iz Odoo-a sa kvačicama, samo za prikaz
   var lepo = function (g) { return ({ 'Duzina': 'Dužina', 'Duzina kombinezona': 'Dužina kombinezona', 'Duzina haljine': 'Dužina haljine', 'Duzina pantalona': 'Dužina pantalona', 'Duzina suknje': 'Dužina suknje', 'Duzina jakne': 'Dužina jakne', 'Duzina kosulje': 'Dužina košulje', 'Duzina mantila': 'Dužina mantila', 'Duzina rukava': 'Dužina rukava', 'Veličina obuce': 'Veličina obuće', 'Gramaza': 'Gramaža', 'Size': 'Veličina' })[g] || g; };
 
+  // Ugnežđen meni: klik otvara/zatvara grupu; na računaru i prelaz mišem
+  var grps = Array.prototype.slice.call(document.querySelectorAll('.grp'));
+  var setGrp = function (g, o) { g.classList.toggle('open', o); g.querySelector('.grp-btn').setAttribute('aria-expanded', String(o)); };
+  var desk = window.matchMedia('(min-width:781px)');
+  grps.forEach(function (g) {
+    var t;
+    g.querySelector('.grp-btn').addEventListener('click', function () {
+      var o = !g.classList.contains('open');
+      if (desk.matches) grps.forEach(function (x) { if (x !== g) setGrp(x, false); });
+      setGrp(g, o);
+    });
+    g.addEventListener('mouseenter', function () { if (!desk.matches) return; clearTimeout(t); grps.forEach(function (x) { if (x !== g) setGrp(x, false); }); setGrp(g, true); });
+    g.addEventListener('mouseleave', function () { if (!desk.matches) return; t = setTimeout(function () { setGrp(g, false); }, 250); });
+  });
+  document.addEventListener('click', function (e) { if (desk.matches && !e.target.closest('.grp')) grps.forEach(function (x) { setGrp(x, false); }); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') grps.forEach(function (x) { if (x.classList.contains('open') && desk.matches) { setGrp(x, false); x.querySelector('.grp-btn').focus(); } }); });
+
   // Category page: render from js/katalog.js by ?k=
   var grid = document.getElementById('k-grid');
   var params = new URLSearchParams(location.search);
@@ -55,12 +72,22 @@
       if (a.getAttribute('href') === 'kategorija.html?k=' + cur) {
         a.setAttribute('aria-current', 'page');
         var more = a.closest('.more'); if (more) more.querySelector('.more-btn').classList.add('has-current');
+        var gr = a.closest('.grp'); if (gr) { gr.querySelector('.grp-btn').classList.add('has-current'); if (!desk.matches) setGrp(gr, true); }
       }
     });
   }
   if (grid && window.KAT && window.PROIZVODI) {
     var kat = window.KAT.filter(function (x) { return x.k === cur; })[0];
-    var base = kat ? window.PROIZVODI.filter(function (p) { return p.k.indexOf(kat.k) > -1; }) : window.PROIZVODI.slice();
+    // Zbirne stranice iz menija: Sve haljine, Sve pantalone
+    var ZBIR = { haljine: ['Haljine', 'Pamučne, lanene i svilene haljine, šivene u Keniji.'], pantalone: ['Pantalone', 'Lanene, pamučne i svilene pantalone.'] };
+    if (!kat && ZBIR[cur]) {
+      var deca = window.KAT.filter(function (x) { return x.k.indexOf(cur + '-') === 0; });
+      var uniq = function (arr) { return arr.filter(function (v, i) { return arr.indexOf(v) === i; }); };
+      kat = { k: cur, n: ZBIR[cur][0], o: ZBIR[cur][1], deca: deca.map(function (x) { return x.k; }),
+        m: uniq([].concat.apply([], deca.map(function (x) { return x.m || []; }))),
+        f: uniq([].concat.apply([], deca.map(function (x) { return x.f || []; }))) };
+    }
+    var base = kat ? window.PROIZVODI.filter(function (p) { return kat.deca ? p.k.some(function (k) { return kat.deca.indexOf(k) > -1; }) : p.k.indexOf(kat.k) > -1; }) : window.PROIZVODI.slice();
     // Pretraga (?q=): po nazivu, modelu i kategoriji, bez obzira na kvačice
     var q = (params.get('q') || '').trim();
     var bez = function (t) { return String(t).toLowerCase().replace(/đ/g, 'dj').normalize('NFD').replace(/[\u0300-\u036f]/g, ''); };
@@ -86,8 +113,10 @@
     var grp = (kat && /^haljine/.test(kat.k)) ? ['haljine-pamucne', 'haljine-lanene', 'haljine-svilene']
             : (kat && /^pantalone/.test(kat.k)) ? ['pantalone-lanene', 'pantalone-pamucne', 'pantalone-svilene'] : null;
     if (grp) {
+      var sveK = /^haljine/.test(kat.k) ? 'haljine' : 'pantalone';
+      grp = [sveK].concat(grp);
       chips.innerHTML = grp.map(function (k) {
-        var n = window.KAT.filter(function (x) { return x.k === k; })[0].n;
+        var n = k === sveK ? 'Sve' : window.KAT.filter(function (x) { return x.k === k; })[0].n;
         return '<a href="kategorija.html?k=' + k + '"' + (k === cur ? ' class="on" aria-current="page"' : '') + '>' + n + '</a>';
       }).join('');
     } else { chips.hidden = true; }
