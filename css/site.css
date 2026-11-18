@@ -565,3 +565,4 @@ dialog.tab-dlg::backdrop{background:rgba(18,14,10,.55)}
 .f input:focus,.f select:focus,.f textarea:focus{outline:2px solid var(--terra);outline-offset:0;border-color:var(--ebony)}
 .f label{font-size:1rem}
 @media (max-width:780px){.menu-btn{padding-left:40px}}
+.pay label[hidden],.pay p[hidden]{display:none}

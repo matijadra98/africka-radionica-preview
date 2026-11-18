@@ -209,7 +209,7 @@
       var nt = pdp.querySelector('.note');
       if (P.z) nt.textContent = P.z + '.'; else nt.remove();
       document.getElementById('trust').innerHTML = P.d === 'porudzbina'
-        ? '<li>Šije se po porudžbini, izrada oko 3 nedelje</li><li>Plaćanje unapred: uplata na račun ili karticom</li><li>Besplatna dostava u Srbiji preko 4.000 din.</li>'
+        ? '<li>Šije se po porudžbini, izrada oko 3 nedelje</li><li>Plaćanje unapred, uplatom na račun</li><li>Besplatna dostava u Srbiji preko 4.000 din.</li>'
         : '<li>Plaćanje pouzećem, kuriru kad paket stigne</li><li>Na stanju, isporuka 2–3 dana</li><li>Besplatna dostava u Srbiji preko 4.000 din.</li>';
       pdp.dataset.d = P.d; pdp.dataset.id = pid;
       var fs = pdp.querySelector('fieldset'), html = '';
@@ -301,12 +301,20 @@
       document.getElementById('c-sum').innerHTML = c.length ? '<div><span>Proizvodi</span><span>' + fmt(sum) + '</span></div><div><span>Dostava</span><span>' + (sum >= 4000 ? 'besplatna' : 'po ceni kurirske službe') + '</span></div><div class="tot"><span>Ukupno</span><span>' + fmt(sum) + '</span></div>' : '';
       document.getElementById('c-prazno').hidden = c.length > 0;
       document.getElementById('c-form').hidden = c.length === 0;
-      // Pouzeće samo kad je sve na stanju (logika korpe 11.11.2026)
+      // Pravilo (korisnik 18.11.2026): sve na stanju, isporuka 2–3 dana → može pouzeće (ili račun, kartica);
+      // u svakom drugom slučaju samo uplata na račun unapred.
       var svePoStanju = c.every(function (x) { return x.d !== 'porudzbina'; });
-      var lp = document.getElementById('pay-pouzece'), ip = lp.querySelector('input');
-      ip.disabled = !svePoStanju; lp.classList.toggle('off', !svePoStanju);
-      lp.querySelector('small').textContent = svePoStanju ? 'Plaćate kuriru gotovinom kad paket stigne.' : 'Nije moguće: u korpi je komad koji se šije po porudžbini, on se plaća unapred.';
-      if (!svePoStanju && ip.checked) ip.checked = false;
+      var info = document.getElementById('pay-info');
+      ['pay-pouzece', 'pay-kartica'].forEach(function (id) {
+        var l = document.getElementById(id); l.hidden = !svePoStanju;
+        if (!svePoStanju) l.querySelector('input').checked = false;
+      });
+      var rc = document.querySelector('#pay-racun input');
+      if (!svePoStanju) {
+        info.hidden = false;
+        info.textContent = 'U korpi je komad koji se šije po porudžbini (oko 3 nedelje), pa se porudžbina plaća unapred, uplatom na račun. Izrada počinje kad uplata stigne.';
+        rc.checked = true;
+      } else { info.hidden = true; }
     };
     drawCart();
     cItems.addEventListener('click', function (e) {
@@ -318,7 +326,6 @@
     cf.addEventListener('change', function (e) {
       if (e.target.name === 'placanje') {
         document.getElementById('e-c-pay').textContent = '';
-        document.getElementById('c-email-opt').textContent = e.target.value === 'kartica' ? '(obavezan za plaćanje karticom)' : '(nije obavezan)';
       }
     });
     cf.addEventListener('submit', function (e) {
@@ -336,14 +343,14 @@
       chk('c-mesto', function (v) { return v.length < 2 ? 'Upišite mesto.' : ''; });
       chk('c-pb', function (v) { return !/^\d{5}$/.test(v.replace(/\s/g, '')) ? 'Poštanski broj ima 5 cifara, npr. 11000.' : ''; });
       var pay = cf.querySelector('input[name="placanje"]:checked');
-      chk('c-email', function (v) { if (pay && pay.value === 'kartica' && !v) return 'Za plaćanje karticom upišite email, na njega šaljemo link.'; return v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'Proverite email adresu.' : ''; });
+      chk('c-email', function (v) { return !v ? 'Upišite email, na njega šaljemo potvrdu porudžbine.' : !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'Proverite email adresu, npr. ime@gmail.com.' : ''; });
       var ep = document.getElementById('e-c-pay');
       if (!pay) { ep.textContent = 'Izaberite način plaćanja.'; ok = false; first = first || cf.querySelector('input[name="placanje"]:not(:disabled)'); } else ep.textContent = '';
       var st = document.getElementById('c-status');
       st.hidden = false;
       if (!ok) { st.className = 'status bad f-wide'; st.textContent = 'Proverite označena polja.'; if (first) first.focus(); return; }
       st.className = 'status ok f-wide';
-      st.textContent = 'Hvala! Ovo je pregled novog sajta, pa porudžbina nije poslata. Na pravom sajtu dobili biste potvrdu porudžbine' + (pay.value === 'pouzece' ? ' i paket plaćate kuriru.' : pay.value === 'racun' ? ' i podatke za uplatu.' : ' i link za plaćanje karticom na email.');
+      st.textContent = 'Hvala! Ovo je pregled novog sajta, pa porudžbina nije poslata. Na pravom sajtu na email biste dobili potvrdu porudžbine' + (pay.value === 'pouzece' ? ', a paket plaćate kuriru.' : pay.value === 'racun' ? ' i podatke za uplatu.' : ' i link za plaćanje karticom.');
       st.focus();
     });
   }

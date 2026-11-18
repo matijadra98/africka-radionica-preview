@@ -16,9 +16,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Familjen+Grotesk:wght@400;500&display=swap">
 <script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="css/site.css?v=c470bfda">
-<script src="js/katalog.js?v=c470bfda" defer></script>
-<script src="js/site.js?v=c470bfda" defer></script>
+<link rel="stylesheet" href="css/site.css?v=b9f41c31">
+<script src="js/katalog.js?v=b9f41c31" defer></script>
+<script src="js/site.js?v=b9f41c31" defer></script>
 </head>
 <body class="">
 <a class="skip" href="#main">Preskoči na sadržaj</a>
@@ -71,7 +71,7 @@
 <section class="phead">
   <div class="narrow">
     <h1>Korpa</h1>
-    <p>Za poručivanje vam ne treba nalog ni lozinka. Upišite podatke za dostavu i izaberite kako plaćate.</p>
+    <p>Za poručivanje vam ne treba nalog ni lozinka. Upišite podatke za dostavu i email, jer vam sve informacije o porudžbini šaljemo emailom.</p>
   </div>
 </section>
 
@@ -114,17 +114,18 @@
         <p class="err" id="e-c-pb" aria-live="polite"></p>
       </div>
       <div class="f f-wide">
-        <label for="c-email">Email <span id="c-email-opt">(nije obavezan)</span></label>
-        <input id="c-email" name="email" type="email" autocomplete="email" aria-describedby="h-c-email e-c-email">
-        <p class="note" id="h-c-email" style="margin:0">Na email stiže potvrda porudžbine.</p>
+        <label for="c-email">Email <span class="req" aria-hidden="true">*</span></label>
+        <input id="c-email" name="email" type="email" autocomplete="email" required aria-describedby="h-c-email e-c-email">
+        <p class="note" id="h-c-email" style="margin:0">Na email šaljemo potvrdu porudžbine, podatke za uplatu i obaveštenje o slanju.</p>
         <p class="err" id="e-c-email" aria-live="polite"></p>
       </div>
 
       <fieldset class="pay f-wide" id="c-pay" aria-describedby="e-c-pay">
         <legend>Način plaćanja <span class="req" aria-hidden="true">*</span></legend>
-        <label id="pay-pouzece"><input type="radio" name="placanje" value="pouzece"><span><b>Pouzećem</b><small>Plaćate kuriru gotovinom kad paket stigne.</small></span></label>
-        <label><input type="radio" name="placanje" value="racun"><span><b>Uplata na račun</b><small>Podatke za uplatu dobijate odmah posle porudžbine.</small></span></label>
-        <label><input type="radio" name="placanje" value="kartica"><span><b>Karticom</b><small>Link za plaćanje karticom šaljemo na email kad potvrdimo porudžbinu.</small></span></label>
+        <p class="no-acc" id="pay-info" hidden></p>
+        <label id="pay-pouzece"><input type="radio" name="placanje" value="pouzece"><span><b>Pouzećem</b><small>Plaćate kuriru gotovinom kad paket stigne, za 2–3 dana.</small></span></label>
+        <label id="pay-racun"><input type="radio" name="placanje" value="racun"><span><b>Uplata na račun</b><small>Podatke za uplatu šaljemo na email. Šaljemo kad uplata stigne.</small></span></label>
+        <label id="pay-kartica"><input type="radio" name="placanje" value="kartica"><span><b>Karticom</b><small>Link za plaćanje karticom šaljemo na email kad potvrdimo porudžbinu.</small></span></label>
         <p class="err" id="e-c-pay" aria-live="polite"></p>
       </fieldset>
 
@@ -134,7 +135,7 @@
       </div>
       <div id="c-status" class="status f-wide" role="status" tabindex="-1" hidden></div>
       <div class="f-wide"><button class="btn" type="submit" style="width:100%">Poruči</button></div>
-      <p class="f-wide tbc" style="font-size:.92rem;padding:10px 12px">Pregled: porudžbina se ne šalje. Na pravom sajtu ovo je Odoo korpa podešena isto: bez obavezne registracije, pouzeće samo kad je sve na stanju.</p>
+      <p class="f-wide tbc" style="font-size:.92rem;padding:10px 12px">Pregled: porudžbina se ne šalje. Na pravom sajtu je Odoo korpa: bez naloga (kao sada), email obavezan, pouzeće samo kad je sve na stanju sa isporukom 2–3 dana, inače uplata na račun unapred.</p>
     </form>
   </div>
 </section>
