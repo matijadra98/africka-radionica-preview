@@ -98,6 +98,12 @@
       groups['a' + i] = x.v.map(function (v) { return [v, v, function (p) { return !!(p.a && p.a[x.g] && p.a[x.g].indexOf(v) > -1); }]; });
       lists['a' + i] = atrBox.querySelector('[data-name="a' + i + '"]');
     });
+    // Atributi: samo vrednosti koje proizvodi u ovoj kategoriji imaju (kao Odoo); grupa bez vrednosti se ne prikazuje
+    Object.keys(groups).forEach(function (g) {
+      if (g.charAt(0) !== 'a') return;
+      groups[g] = groups[g].filter(function (o) { return base.some(o[2]); });
+      if (!groups[g].length) { lists[g].closest('details').remove(); delete groups[g]; delete lists[g]; }
+    });
     Object.keys(groups).forEach(function (g) {
       lists[g].innerHTML = groups[g].map(function (o, i) {
         var n = base.filter(o[2]).length;
@@ -128,8 +134,8 @@
       if (so === 'cena-o') list.sort(function (a, b) { return num(b.c) - num(a.c); });
       if (so === 'naziv') list.sort(function (a, b) { return a.n.localeCompare(b.n, 'sr'); });
       grid.innerHTML = list.map(function (p) {
-        return '<a class="prod" href="proizvod.html"><div class="ph"><img src="slike/' + p.s + '.webp" alt="' + p.n + '" loading="lazy">' +
-          (p.z ? '<em>' + p.z + '</em>' : p.d === 'porudzbina' ? '<em>Po porudžbini</em>' : '') + '</div><h3>' + p.n + '</h3><p>' + p.c + ' din.</p></a>';
+        return '<a class="prod" href="proizvod.html?p=' + p.s.replace('p/', '') + '"><div class="ph"><img src="slike/' + p.s + '.webp" alt="' + p.n + '" loading="lazy">' +
+          (p.z ? '<em>' + p.z + '</em>' : p.d === 'porudzbina' ? '<em>Po porudžbini</em>' : '') + '</div><h3>' + p.n + '</h3><p>' + (p.c ? p.c + ' din.' : 'Cena na upit') + '</p></a>';
       }).join('');
       document.getElementById('k-prazno').hidden = list.length > 0;
       var active = [];
@@ -161,6 +167,42 @@
     render();
   }
 
+  // Product page: ?p=<id> prikazuje taj proizvod iz js/katalog.js (bez parametra ostaje primer)
+  var pdp = document.querySelector('.pdp');
+  var pid = params.get('p');
+  if (pdp && pid && window.PROIZVODI) {
+    var P = window.PROIZVODI.filter(function (x) { return x.s === 'p/' + pid; })[0];
+    if (P) {
+      var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;'); };
+      var K0 = window.KAT.filter(function (x) { return x.k === P.k[0]; })[0];
+      var img = pdp.querySelector('.pdp-img img');
+      img.src = 'slike/' + P.s + '.webp'; img.alt = P.n; img.removeAttribute('width'); img.removeAttribute('height');
+      pdp.querySelector('.crumbs').innerHTML = '<a href="kategorija.html?k=' + K0.k + '">' + esc(K0.n) + '</a>' + (P.md ? ' / ' + esc(P.md) : '');
+      pdp.querySelector('h1').textContent = P.n;
+      pdp.querySelector('.price').textContent = P.c ? P.c + ' din.' : 'Cena na upit';
+      pdp.querySelector('.note').textContent = P.d === 'porudzbina' ? 'Po porudžbini, izrada oko 3 nedelje.' : (P.z ? P.z + '. ' : '') + 'Na stanju, isporuka 2–3 dana.';
+      var fs = pdp.querySelector('fieldset'), html = '';
+      Object.keys(P.a || {}).forEach(function (g, gi) {
+        html += '<fieldset><legend>' + esc(g) + '</legend><div class="sizes">' + P.a[g].map(function (v) {
+          return '<label><input type="radio" name="' + (gi ? 'atr' + gi : 'vel') + '" value="' + esc(v) + '"><span>' + esc(v) + '</span></label>';
+        }).join('') + '</div></fieldset>';
+      });
+      fs.outerHTML = html;
+      var op = pdp.querySelector('.acc details p');
+      if (P.o) op.textContent = P.o;
+      document.title = P.n + ' | Afrička Radionica';
+      var rel = window.PROIZVODI.filter(function (x) { return x !== P && x.k.indexOf(P.k[0]) > -1; }).slice(0, 4);
+      var sec = document.querySelector('.pdp ~ .sec, .sec');
+      if (sec && rel.length) {
+        sec.querySelector('h2').textContent = 'Još iz kategorije ' + K0.n;
+        var mo = sec.querySelector('a.more'); mo.href = 'kategorija.html?k=' + K0.k; mo.textContent = 'Sve iz kategorije';
+        sec.querySelector('.grid').innerHTML = rel.map(function (x) {
+          return '<a class="prod" href="proizvod.html?p=' + x.s.replace('p/', '') + '"><div class="ph"><img src="slike/' + x.s + '.webp" alt="' + esc(x.n) + '" loading="lazy"></div><h3>' + esc(x.n) + '</h3><p>' + (x.c ? x.c + ' din.' : 'Cena na upit') + '</p></a>';
+        }).join('');
+      }
+    }
+  }
+
   // Product image zoom
   var pimg = document.querySelector('.pdp-img');
   if (pimg) {
@@ -176,7 +218,8 @@
     var msg = document.getElementById('added');
     var size = document.querySelector('input[name="vel"]:checked');
     msg.hidden = false;
-    msg.textContent = size ? 'Pregled: veličina ' + size.value + ' bi bila dodata u korpu. Kupovina radi na pravom sajtu.' : 'Izaberite veličinu.';
+    var needs = !!document.querySelector('input[name="vel"]');
+    msg.textContent = size ? 'Pregled: veličina ' + size.value + ' bi bila dodata u korpu. Kupovina radi na pravom sajtu.' : needs ? 'Izaberite veličinu.' : 'Pregled: proizvod bi bio dodat u korpu. Kupovina radi na pravom sajtu.';
   });
 
   // Contact form: validation only
