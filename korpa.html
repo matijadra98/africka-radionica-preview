@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="sr-Latn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Korpa | Afrička Radionica</title>
+<meta name="description" content="Poručivanje bez naloga i lozinke: podaci za dostavu i izbor načina plaćanja.">
+<!-- Mockup: ukloniti noindex pri puštanju -->
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="Korpa | Afrička Radionica">
+<meta property="og:description" content="Poručivanje bez naloga i lozinke: podaci za dostavu i izbor načina plaćanja.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Afrička Radionica">
+<meta name="theme-color" content="#f3eee5">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Familjen+Grotesk:wght@400;500&display=swap">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="css/site.css?v=c470bfda">
+<script src="js/katalog.js?v=c470bfda" defer></script>
+<script src="js/site.js?v=c470bfda" defer></script>
+</head>
+<body class="">
+<a class="skip" href="#main">Preskoči na sadržaj</a>
+<header class="hdr">
+  <div class="hdr-in">
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="meni"><span aria-hidden="true"></span><span class="mb-t">Meni</span></button>
+    <div class="util">
+      <form class="srch" action="kategorija.html" role="search"><label class="sr" for="q-d">Pretraga</label><input id="q-d" name="q" type="search" placeholder="Pretraga" autocomplete="off"><button type="submit">Traži</button></form>
+      <a href="atelje.html" class="t-link">Atelje</a>
+    </div>
+    <a class="mark" href="index.html" aria-label="Afrička Radionica, početna">Afrička <i>Radionica</i></a>
+    <div class="tools">
+      <a href="kontakt.html" class="t-link">Kontakt</a>
+      <a href="korpa.html" class="bag" aria-current="page">Korpa <span class="bag-n">0</span></a>
+    </div>
+  </div>
+  <div class="m-row">
+    <form class="srch" action="kategorija.html" role="search"><label class="sr" for="q-m">Pretraga</label><input id="q-m" name="q" type="search" placeholder="Pretraga, npr. haljina" autocomplete="off"><button type="submit">Traži</button></form>
+    <a href="kontakt.html" class="m-kontakt">Kontakt</a>
+  </div>
+  <nav id="meni" class="cats" aria-label="Kategorije">
+    <ul class="cats-main">
+      <li><a href="kategorija.html?k=poslednji-komadi">Poslednji komadi</a></li>
+      <li><a href="kategorija.html?k=swara-man">Swara man</a></li>
+      <li><a href="kategorija.html?k=bluze-tunike-kardigani">Bluze, tunike i kardigani</a></li>
+      <li><a href="kategorija.html?k=haljine-pamucne">Haljine pamučne</a></li>
+      <li><a href="kategorija.html?k=haljine-lanene">Haljine lanene</a></li>
+      <li><a href="kategorija.html?k=haljine-svilene">Haljine svilene</a></li>
+      <li><a href="kategorija.html?k=kombinezoni">Kombinezoni</a></li>
+      <li><a href="kategorija.html?k=nakit">Nakit</a></li>
+      <li><a href="kategorija.html?k=pantalone-lanene">Pantalone lanene</a></li>
+      <li><a href="kategorija.html?k=pantalone-pamucne">Pantalone pamučne</a></li>
+      <li><a href="kategorija.html?k=pantalone-svilene">Pantalone svilene</a></li>
+      <li><a href="kategorija.html?k=poklon-ideje">Poklon ideje</a></li>
+      <li><a href="kategorija.html?k=sakoi-mantili">Sakoi i mantili</a></li>
+      <li><a href="kategorija.html?k=suknje">Suknje</a></li>
+      <li><a href="kategorija.html?k=tkanine">Tkanine</a></li>
+      <li><a href="kategorija.html?k=torbe-cegeri">Torbe i cegeri</a></li>
+      <li><a href="kategorija.html?k=obuca">Obuća</a></li>
+      <li><a href="https://www.africkaradionica.com/blog">Blog</a></li>
+    </ul>
+    <ul class="cats-mob">
+      <li><a href="atelje.html">Atelje</a></li>
+      <li><a href="kontakt.html#po-meri">Šivenje po meri</a></li>
+      <li><a href="kontakt.html">Kontakt</a></li>
+    </ul>
+  </nav>
+</header>
+<main id="main">
+<section class="phead">
+  <div class="narrow">
+    <h1>Korpa</h1>
+    <p>Za poručivanje vam ne treba nalog ni lozinka. Upišite podatke za dostavu i izaberite kako plaćate.</p>
+  </div>
+</section>
+
+<section class="sec-s" style="padding-top:0">
+  <div class="wrap cart">
+    <div>
+      <h2 style="font-size:1.6rem;margin-bottom:14px">Vaša porudžbina</h2>
+      <ul class="cart-items" id="c-items"></ul>
+      <p class="tbc" id="c-primer" style="font-size:.95rem;padding:10px 12px;margin-top:14px" hidden>Korpa je bila prazna, pa je prikazan primer. Proizvod dodajete dugmetom „Dodaj u korpu“ na stranici proizvoda.</p>
+      <div class="cart-sum" id="c-sum"></div>
+      <p class="empty" id="c-prazno" hidden>Korpa je prazna. <a href="kategorija.html">Pogledajte proizvode</a></p>
+    </div>
+
+    <form id="c-form" class="form" novalidate>
+      <h2 class="f-wide" style="font-size:1.6rem;margin:0">Podaci za dostavu</h2>
+      <div class="f f-wide">
+        <label for="c-ime">Ime i prezime <span class="req" aria-hidden="true">*</span></label>
+        <input id="c-ime" name="ime" autocomplete="name" required aria-describedby="e-c-ime">
+        <p class="err" id="e-c-ime" aria-live="polite"></p>
+      </div>
+      <div class="f f-wide">
+        <label for="c-tel">Broj telefona <span class="req" aria-hidden="true">*</span></label>
+        <input id="c-tel" name="telefon" type="tel" inputmode="tel" autocomplete="tel" required aria-describedby="h-c-tel e-c-tel">
+        <p class="note" id="h-c-tel" style="margin:0">Kurir vas zove pre dostave.</p>
+        <p class="err" id="e-c-tel" aria-live="polite"></p>
+      </div>
+      <div class="f f-wide">
+        <label for="c-adr">Ulica i broj <span class="req" aria-hidden="true">*</span></label>
+        <input id="c-adr" name="adresa" autocomplete="street-address" required aria-describedby="e-c-adr">
+        <p class="err" id="e-c-adr" aria-live="polite"></p>
+      </div>
+      <div class="f">
+        <label for="c-mesto">Mesto <span class="req" aria-hidden="true">*</span></label>
+        <input id="c-mesto" name="mesto" autocomplete="address-level2" required aria-describedby="e-c-mesto">
+        <p class="err" id="e-c-mesto" aria-live="polite"></p>
+      </div>
+      <div class="f">
+        <label for="c-pb">Poštanski broj <span class="req" aria-hidden="true">*</span></label>
+        <input id="c-pb" name="postanski" inputmode="numeric" autocomplete="postal-code" required aria-describedby="e-c-pb">
+        <p class="err" id="e-c-pb" aria-live="polite"></p>
+      </div>
+      <div class="f f-wide">
+        <label for="c-email">Email <span id="c-email-opt">(nije obavezan)</span></label>
+        <input id="c-email" name="email" type="email" autocomplete="email" aria-describedby="h-c-email e-c-email">
+        <p class="note" id="h-c-email" style="margin:0">Na email stiže potvrda porudžbine.</p>
+        <p class="err" id="e-c-email" aria-live="polite"></p>
+      </div>
+
+      <fieldset class="pay f-wide" id="c-pay" aria-describedby="e-c-pay">
+        <legend>Način plaćanja <span class="req" aria-hidden="true">*</span></legend>
+        <label id="pay-pouzece"><input type="radio" name="placanje" value="pouzece"><span><b>Pouzećem</b><small>Plaćate kuriru gotovinom kad paket stigne.</small></span></label>
+        <label><input type="radio" name="placanje" value="racun"><span><b>Uplata na račun</b><small>Podatke za uplatu dobijate odmah posle porudžbine.</small></span></label>
+        <label><input type="radio" name="placanje" value="kartica"><span><b>Karticom</b><small>Link za plaćanje karticom šaljemo na email kad potvrdimo porudžbinu.</small></span></label>
+        <p class="err" id="e-c-pay" aria-live="polite"></p>
+      </fieldset>
+
+      <div class="f f-wide">
+        <label for="c-nap">Napomena (nije obavezna)</label>
+        <textarea id="c-nap" name="napomena" rows="3"></textarea>
+      </div>
+      <div id="c-status" class="status f-wide" role="status" tabindex="-1" hidden></div>
+      <div class="f-wide"><button class="btn" type="submit" style="width:100%">Poruči</button></div>
+      <p class="f-wide tbc" style="font-size:.92rem;padding:10px 12px">Pregled: porudžbina se ne šalje. Na pravom sajtu ovo je Odoo korpa podešena isto: bez obavezne registracije, pouzeće samo kad je sve na stanju.</p>
+    </form>
+  </div>
+</section>
+</main>
+<footer class="ftr">
+  <div class="wrap ftr-top">
+    <div class="ftr-brand">
+      <p class="mark mark-lg">Afrička <i>Radionica</i></p>
+      <p>Ručno sečena i šivena odeća iz ateljea u kenijskoj savani. Deo Swara Design tima.</p>
+    </div>
+    <form class="news" onsubmit="event.preventDefault();this.querySelector('.news-ok').hidden=false">
+      <label for="n-email">Prvi saznajte za nove kreacije, sniženja i showroom</label>
+      <div class="news-row">
+        <input id="n-email" type="email" name="email" autocomplete="email" placeholder="Vaša email adresa" required>
+        <button type="submit">Prijavi me</button>
+      </div>
+      <p class="news-ok" hidden>Hvala. Ovo je pregled novog sajta, pa prijava još nije povezana.</p>
+    </form>
+  </div>
+  <div class="wrap ftr-cols">
+    <div><h2>Kupovina</h2><p><a href="kategorija.html?k=poslednji-komadi">Poslednji komadi</a><br><a href="kategorija.html?k=haljine-pamucne">Haljine</a><br><a href="kategorija.html?k=swara-man">Swara man</a><br><a href="kategorija.html?k=nakit">Nakit</a><br><a href="kategorija.html?k=poklon-ideje">Poklon ideje</a></p></div>
+    <div><h2>Kuća</h2><p><a href="atelje.html">Atelje</a><br><a href="kontakt.html#po-meri">Šivenje po meri</a><br><a href="kontakt.html">Kontakt</a></p></div>
+    <div><h2>Pomoć</h2><p><a href="https://www.africkaradionica.com/shipping-policy">Dostava</a><br><a href="https://www.africkaradionica.com/refund-policy">Povrat</a><br><a href="https://www.africkaradionica.com/terms-of-service">Uslovi kupovine</a><br><a href="#">Moj nalog (prijava)</a></p></div>
+    <div><h2>Pratite nas</h2><p><a href="https://www.instagram.com/africka.radionica/" target="_blank" rel="noopener">Instagram</a><br><a href="https://www.facebook.com/moja.africka.radionica" target="_blank" rel="noopener">Facebook</a><br><a href="mailto:shop@africkaradionica.com">shop@africkaradionica.com</a></p></div>
+  </div>
+  <div class="wrap ftr-legal"><p>© 2026 Afrička Radionica</p><p>16% od svake prodaje ide za zaštitu divljih životinja u savani.</p></div>
+</footer>
+</body>
+</html>

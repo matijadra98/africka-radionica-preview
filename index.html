@@ -16,26 +16,28 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&family=Familjen+Grotesk:wght@400;500&display=swap">
 <script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="css/site.css?v=9bc5b209">
-<script src="js/katalog.js?v=9bc5b209" defer></script>
-<script src="js/site.js?v=9bc5b209" defer></script>
+<link rel="stylesheet" href="css/site.css?v=c470bfda">
+<script src="js/katalog.js?v=c470bfda" defer></script>
+<script src="js/site.js?v=c470bfda" defer></script>
 </head>
 <body class="home">
 <a class="skip" href="#main">Preskoči na sadržaj</a>
 <header class="hdr">
   <div class="hdr-in">
-    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="meni"><span aria-hidden="true"></span><span class="sr">Meni</span></button>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="meni"><span aria-hidden="true"></span><span class="mb-t">Meni</span></button>
     <div class="util">
-      <a href="kategorija.html" class="t-link">Pretraga</a>
+      <form class="srch" action="kategorija.html" role="search"><label class="sr" for="q-d">Pretraga</label><input id="q-d" name="q" type="search" placeholder="Pretraga" autocomplete="off"><button type="submit">Traži</button></form>
       <a href="atelje.html" class="t-link">Atelje</a>
-      <a href="kontakt.html#po-meri" class="t-link">Po meri</a>
     </div>
     <a class="mark" href="index.html" aria-label="Afrička Radionica, početna">Afrička <i>Radionica</i></a>
     <div class="tools">
       <a href="kontakt.html" class="t-link">Kontakt</a>
-      <a href="#" class="t-link">Prijavi se</a>
-      <a href="#" class="bag" aria-label="Korpa, 0 artikala">Korpa <span>0</span></a>
+      <a href="korpa.html" class="bag">Korpa <span class="bag-n">0</span></a>
     </div>
+  </div>
+  <div class="m-row">
+    <form class="srch" action="kategorija.html" role="search"><label class="sr" for="q-m">Pretraga</label><input id="q-m" name="q" type="search" placeholder="Pretraga, npr. haljina" autocomplete="off"><button type="submit">Traži</button></form>
+    <a href="kontakt.html" class="m-kontakt">Kontakt</a>
   </div>
   <nav id="meni" class="cats" aria-label="Kategorije">
     <ul class="cats-main">
@@ -45,23 +47,18 @@
       <li><a href="kategorija.html?k=haljine-pamucne">Haljine pamučne</a></li>
       <li><a href="kategorija.html?k=haljine-lanene">Haljine lanene</a></li>
       <li><a href="kategorija.html?k=haljine-svilene">Haljine svilene</a></li>
-      <li class="more">
-        <button type="button" class="more-btn" aria-expanded="false" aria-controls="vise">Više</button>
-        <ul id="vise" class="more-list">
-          <li><a href="kategorija.html?k=kombinezoni">Kombinezoni</a></li>
-          <li><a href="kategorija.html?k=nakit">Nakit</a></li>
-          <li><a href="kategorija.html?k=pantalone-lanene">Pantalone lanene</a></li>
-          <li><a href="kategorija.html?k=pantalone-pamucne">Pantalone pamučne</a></li>
-          <li><a href="kategorija.html?k=pantalone-svilene">Pantalone svilene</a></li>
-          <li><a href="kategorija.html?k=poklon-ideje">Poklon ideje</a></li>
-          <li><a href="kategorija.html?k=sakoi-mantili">Sakoi i mantili</a></li>
-          <li><a href="kategorija.html?k=suknje">Suknje</a></li>
-          <li><a href="kategorija.html?k=tkanine">Tkanine</a></li>
-          <li><a href="kategorija.html?k=torbe-cegeri">Torbe i cegeri</a></li>
-          <li><a href="kategorija.html?k=obuca">Obuća</a></li>
-          <li><a href="https://www.africkaradionica.com/blog">Blog</a></li>
-        </ul>
-      </li>
+      <li><a href="kategorija.html?k=kombinezoni">Kombinezoni</a></li>
+      <li><a href="kategorija.html?k=nakit">Nakit</a></li>
+      <li><a href="kategorija.html?k=pantalone-lanene">Pantalone lanene</a></li>
+      <li><a href="kategorija.html?k=pantalone-pamucne">Pantalone pamučne</a></li>
+      <li><a href="kategorija.html?k=pantalone-svilene">Pantalone svilene</a></li>
+      <li><a href="kategorija.html?k=poklon-ideje">Poklon ideje</a></li>
+      <li><a href="kategorija.html?k=sakoi-mantili">Sakoi i mantili</a></li>
+      <li><a href="kategorija.html?k=suknje">Suknje</a></li>
+      <li><a href="kategorija.html?k=tkanine">Tkanine</a></li>
+      <li><a href="kategorija.html?k=torbe-cegeri">Torbe i cegeri</a></li>
+      <li><a href="kategorija.html?k=obuca">Obuća</a></li>
+      <li><a href="https://www.africkaradionica.com/blog">Blog</a></li>
     </ul>
     <ul class="cats-mob">
       <li><a href="atelje.html">Atelje</a></li>
@@ -153,7 +150,7 @@
   <div class="wrap ftr-cols">
     <div><h2>Kupovina</h2><p><a href="kategorija.html?k=poslednji-komadi">Poslednji komadi</a><br><a href="kategorija.html?k=haljine-pamucne">Haljine</a><br><a href="kategorija.html?k=swara-man">Swara man</a><br><a href="kategorija.html?k=nakit">Nakit</a><br><a href="kategorija.html?k=poklon-ideje">Poklon ideje</a></p></div>
     <div><h2>Kuća</h2><p><a href="atelje.html">Atelje</a><br><a href="kontakt.html#po-meri">Šivenje po meri</a><br><a href="kontakt.html">Kontakt</a></p></div>
-    <div><h2>Pomoć</h2><p><a href="https://www.africkaradionica.com/shipping-policy">Dostava</a><br><a href="https://www.africkaradionica.com/refund-policy">Povrat</a><br><a href="https://www.africkaradionica.com/terms-of-service">Uslovi kupovine</a></p></div>
+    <div><h2>Pomoć</h2><p><a href="https://www.africkaradionica.com/shipping-policy">Dostava</a><br><a href="https://www.africkaradionica.com/refund-policy">Povrat</a><br><a href="https://www.africkaradionica.com/terms-of-service">Uslovi kupovine</a><br><a href="#">Moj nalog (prijava)</a></p></div>
     <div><h2>Pratite nas</h2><p><a href="https://www.instagram.com/africka.radionica/" target="_blank" rel="noopener">Instagram</a><br><a href="https://www.facebook.com/moja.africka.radionica" target="_blank" rel="noopener">Facebook</a><br><a href="mailto:shop@africkaradionica.com">shop@africkaradionica.com</a></p></div>
   </div>
   <div class="wrap ftr-legal"><p>© 2026 Afrička Radionica</p><p>16% od svake prodaje ide za zaštitu divljih životinja u savani.</p></div>

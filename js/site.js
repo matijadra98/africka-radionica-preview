@@ -43,6 +43,9 @@
     });
   }
 
+  // Nazivi atributa iz Odoo-a sa kvačicama, samo za prikaz
+  var lepo = function (g) { return ({ 'Duzina': 'Dužina', 'Duzina kombinezona': 'Dužina kombinezona', 'Duzina haljine': 'Dužina haljine', 'Duzina pantalona': 'Dužina pantalona', 'Duzina suknje': 'Dužina suknje', 'Duzina jakne': 'Dužina jakne', 'Duzina kosulje': 'Dužina košulje', 'Duzina mantila': 'Dužina mantila', 'Duzina rukava': 'Dužina rukava', 'Veličina obuce': 'Veličina obuće', 'Gramaza': 'Gramaža', 'Size': 'Veličina' })[g] || g; };
+
   // Category page: render from js/katalog.js by ?k=
   var grid = document.getElementById('k-grid');
   var params = new URLSearchParams(location.search);
@@ -58,14 +61,26 @@
   if (grid && window.KAT && window.PROIZVODI) {
     var kat = window.KAT.filter(function (x) { return x.k === cur; })[0];
     var base = kat ? window.PROIZVODI.filter(function (p) { return p.k.indexOf(kat.k) > -1; }) : window.PROIZVODI.slice();
+    // Pretraga (?q=): po nazivu, modelu i kategoriji, bez obzira na kvačice
+    var q = (params.get('q') || '').trim();
+    var bez = function (t) { return String(t).toLowerCase().replace(/đ/g, 'dj').normalize('NFD').replace(/[\u0300-\u036f]/g, ''); };
+    if (q && !kat) {
+      var reci = bez(q).split(/\s+/).map(function (w) { return w.length > 4 ? w.replace(/(e|a|i|u|o)$/, '') : w; });
+      base = window.PROIZVODI.filter(function (p) {
+        var t = bez(p.n + ' ' + (p.md || '') + ' ' + p.k.map(function (k) { var c = window.KAT.filter(function (x) { return x.k === k; })[0]; return c ? c.n : ''; }).join(' '));
+        return reci.every(function (w) { return t.indexOf(w) > -1; });
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('.srch input'), function (i) { i.value = q; });
+    }
     if (kat) {
       document.getElementById('k-naslov').textContent = kat.n;
       document.getElementById('k-opis').textContent = kat.o;
       document.querySelector('#k-crumbs span').textContent = kat.n;
       document.title = kat.n + ' | Afrička Radionica';
     } else {
-      document.getElementById('k-naslov').textContent = 'Svi proizvodi';
-      document.querySelector('#k-crumbs span').textContent = 'Svi proizvodi';
+      document.getElementById('k-naslov').textContent = q ? 'Pretraga: „' + q + '“' : 'Svi proizvodi';
+      document.querySelector('#k-crumbs span').textContent = q ? 'Pretraga' : 'Svi proizvodi';
+      if (q) { document.getElementById('k-opis').textContent = base.length ? 'Pronađeno: ' + base.length + '. Ako ne vidite ono što tražite, pišite nam preko kontakt stranice.' : 'Nismo našli proizvod za „' + q + '“. Probajte drugu reč, npr. haljina, suknja ili japanke.'; document.title = 'Pretraga | Afrička Radionica'; }
     }
     var chips = document.getElementById('k-chips');
     var grp = (kat && /^haljine/.test(kat.k)) ? ['haljine-pamucne', 'haljine-lanene', 'haljine-svilene']
@@ -83,8 +98,17 @@
     var atrBox = document.getElementById('fg-atr');
     // Samo filteri koje ta kategorija ima (kao na sadašnjem sajtu); bez kategorije svi
     var vis = function (x) { return !(kat && kat.f) || kat.f.indexOf(x.g) > -1; };
+    // Glavni filter veličine (uvek vidljiv, kao dugmad): Veličina, inače Veličina obuce, inače Size
+    var velBox = document.getElementById('fg-vel'), pv = -1;
+    ['Veličina', 'Veličina obuce', 'Size'].some(function (n) {
+      var i = ATR.map(function (x) { return x.g; }).indexOf(n);
+      if (i > -1 && vis(ATR[i]) && base.some(function (p) { return p.a && p.a[n] && p.a[n].length; })) { pv = i; return true; }
+      return false;
+    });
+    if (pv > -1) velBox.querySelector('legend').textContent = lepo(ATR[pv].g);
+    else velBox.hidden = true;
     atrBox.innerHTML = ATR.map(function (x, i) {
-      return vis(x) ? '<details class="fg fgd"><summary>' + x.g + '</summary><div class="fg-list" data-name="a' + i + '"></div></details>' : '';
+      return (vis(x) && i !== pv) ? '<details class="fg fgd"><summary>' + lepo(x.g) + '</summary><div class="fg-list" data-name="a' + i + '"></div></details>' : '';
     }).join('');
     var models = kat && kat.m && kat.m.length ? kat.m : [];
     if (!models.length) document.getElementById('fg-model').hidden = true;
@@ -96,14 +120,16 @@
     ATR.forEach(function (x, i) {
       if (!vis(x)) return;
       groups['a' + i] = x.v.map(function (v) { return [v, v, function (p) { return !!(p.a && p.a[x.g] && p.a[x.g].indexOf(v) > -1); }]; });
-      lists['a' + i] = atrBox.querySelector('[data-name="a' + i + '"]');
+      lists['a' + i] = i === pv ? velBox.querySelector('.fg-list') : atrBox.querySelector('[data-name="a' + i + '"]');
     });
     // Atributi: samo vrednosti koje proizvodi u ovoj kategoriji imaju (kao Odoo); grupa bez vrednosti se ne prikazuje
     Object.keys(groups).forEach(function (g) {
       if (g.charAt(0) !== 'a') return;
       groups[g] = groups[g].filter(function (o) { return base.some(o[2]); });
-      if (!groups[g].length) { lists[g].closest('details').remove(); delete groups[g]; delete lists[g]; }
+      if (!groups[g].length) { var bx = lists[g].closest('.fgd') || lists[g].closest('fieldset'); if (bx.classList.contains('fgd')) bx.remove(); else bx.hidden = true; delete groups[g]; delete lists[g]; }
     });
+    var moreF = document.getElementById('more-f');
+    if (moreF && !models.length && !moreF.querySelector('.fgd')) moreF.hidden = true;
     Object.keys(groups).forEach(function (g) {
       lists[g].innerHTML = groups[g].map(function (o, i) {
         var n = base.filter(o[2]).length;
@@ -139,7 +165,7 @@
       }).join('');
       document.getElementById('k-prazno').hidden = list.length > 0;
       var active = [];
-      Object.keys(groups).forEach(function (g) { sel(g).forEach(function (v) { var o = groups[g].filter(function (x) { return x[0] === v; })[0]; var pre = g.charAt(0) === 'a' ? ATR[+g.slice(1)].g + ': ' : ''; active.push([g, v, pre + o[1]]); }); });
+      Object.keys(groups).forEach(function (g) { sel(g).forEach(function (v) { var o = groups[g].filter(function (x) { return x[0] === v; })[0]; var pre = g.charAt(0) === 'a' ? lepo(ATR[+g.slice(1)].g) + ': ' : ''; active.push([g, v, pre + o[1]]); }); });
       if (!isNaN(cmin) || !isNaN(cmax)) active.push(['cena', '', 'Cena: ' + (isNaN(cmin) ? '0' : cmin) + ' – ' + (isNaN(cmax) ? '55.000' : cmax) + ' din.']);
       document.getElementById('active-f').innerHTML = active.map(function (a) { return '<button type="button" data-g="' + a[0] + '" data-v="' + a[1] + '">' + a[2] + ' <span aria-hidden="true">×</span><span class="sr">ukloni filter</span></button>'; }).join('') + (active.length ? '<button type="button" class="clear">Poništi sve</button>' : '');
       document.getElementById('f-count').textContent = active.length ? '(' + active.length + ')' : '';
@@ -180,10 +206,17 @@
       pdp.querySelector('.crumbs').innerHTML = '<a href="kategorija.html?k=' + K0.k + '">' + esc(K0.n) + '</a>' + (P.md ? ' / ' + esc(P.md) : '');
       pdp.querySelector('h1').textContent = P.n;
       pdp.querySelector('.price').textContent = P.c ? P.c + ' din.' : 'Cena na upit';
-      pdp.querySelector('.note').textContent = P.d === 'porudzbina' ? 'Po porudžbini, izrada oko 3 nedelje.' : (P.z ? P.z + '. ' : '') + 'Na stanju, isporuka 2–3 dana.';
+      var nt = pdp.querySelector('.note');
+      if (P.z) nt.textContent = P.z + '.'; else nt.remove();
+      document.getElementById('trust').innerHTML = P.d === 'porudzbina'
+        ? '<li>Šije se po porudžbini, izrada oko 3 nedelje</li><li>Plaćanje unapred: uplata na račun ili karticom</li><li>Besplatna dostava u Srbiji preko 4.000 din.</li>'
+        : '<li>Plaćanje pouzećem, kuriru kad paket stigne</li><li>Na stanju, isporuka 2–3 dana</li><li>Besplatna dostava u Srbiji preko 4.000 din.</li>';
+      pdp.dataset.d = P.d; pdp.dataset.id = pid;
       var fs = pdp.querySelector('fieldset'), html = '';
       Object.keys(P.a || {}).forEach(function (g, gi) {
-        html += '<fieldset><legend>' + esc(g) + '</legend><div class="sizes">' + P.a[g].map(function (v) {
+        var lg = lepo(g);
+        var tb = (g === 'Veličina' || g === 'Size') ? '<button type="button" class="tab-btn" data-tab>Tabela veličina</button>' : '';
+        html += '<fieldset><legend class="leg-row"><span>' + esc(lg) + '</span>' + tb + '</legend><div class="sizes">' + P.a[g].map(function (v) {
           return '<label><input type="radio" name="' + (gi ? 'atr' + gi : 'vel') + '" value="' + esc(v) + '"><span>' + esc(v) + '</span></label>';
         }).join('') + '</div></fieldset>';
       });
@@ -213,14 +246,107 @@
       im.style.transformOrigin = ((e.clientX - r.left) / r.width * 100) + '% ' + ((e.clientY - r.top) / r.height * 100) + '%';
     });
   }
+  // Korpa: čuva se u ovom pregledaču (localStorage), bez naloga
+  var KEY = 'ar-korpa';
+  function readCart() { try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch (e) { return []; } }
+  function saveCart(c) { try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) {} updBag(); }
+  function updBag() { var n = readCart().length; Array.prototype.forEach.call(document.querySelectorAll('.bag-n'), function (b) { b.textContent = n; }); var bg = document.querySelector('.bag'); if (bg) bg.setAttribute('aria-label', 'Korpa, ' + n + ' artikala'); }
+  updBag();
+
+  // Tabela veličina
+  var dlg = document.getElementById('tabela');
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-tab]') && dlg) { dlg.showModal ? dlg.showModal() : dlg.setAttribute('open', ''); }
+    if (e.target.closest('.tab-close') && dlg) { dlg.close ? dlg.close() : dlg.removeAttribute('open'); }
+  });
+  if (dlg) dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+
   var add = document.getElementById('add');
   if (add) add.addEventListener('click', function () {
     var msg = document.getElementById('added');
-    var size = document.querySelector('input[name="vel"]:checked');
     msg.hidden = false;
-    var needs = !!document.querySelector('input[name="vel"]');
-    msg.textContent = size ? 'Pregled: veličina ' + size.value + ' bi bila dodata u korpu. Kupovina radi na pravom sajtu.' : needs ? 'Izaberite veličinu.' : 'Pregled: proizvod bi bio dodat u korpu. Kupovina radi na pravom sajtu.';
+    var izbor = [], fali = [];
+    Array.prototype.forEach.call(document.querySelectorAll('.pdp fieldset'), function (f) {
+      var c = f.querySelector('input:checked'), n = f.querySelector('legend span') ? f.querySelector('legend span').textContent : f.querySelector('legend').textContent;
+      if (c) izbor.push(n + ': ' + c.value); else fali.push(n.toLowerCase());
+    });
+    if (fali.length) { msg.textContent = 'Prvo izaberite: ' + fali.join(' i ') + '.'; msg.className = 'added warn'; return; }
+    var pd = document.querySelector('.pdp');
+    var img = pd.querySelector('.pdp-img img').getAttribute('src');
+    var cn = pd.querySelector('.price').textContent;
+    var c = readCart();
+    c.push({ n: pd.querySelector('h1').textContent, c: cn, img: img, iz: izbor.join(', '), d: pd.dataset.d || 'stanje' });
+    saveCart(c);
+    msg.className = 'added';
+    msg.innerHTML = 'Dodato u korpu. <a href="korpa.html">Idi u korpu i poruči</a>';
   });
+
+  // Stranica Korpa
+  var cItems = document.getElementById('c-items');
+  if (cItems) {
+    var cnum = function (t) { return parseFloat(String(t).replace(/[^\d,]/g, '').replace(',', '.')) || 0; };
+    var fmt = function (n) { return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ' din.'; };
+    var primer = false;
+    var drawCart = function () {
+      var c = readCart();
+      if (!c.length && !primer && window.PROIZVODI) {
+        var ex = window.PROIZVODI.filter(function (p) { return p.s === 'p/196414'; })[0] || window.PROIZVODI[0];
+        c = [{ n: ex.n, c: ex.c + ' din.', img: 'slike/' + ex.s + '.webp', iz: 'Veličina: S/M', d: ex.d, primer: true }];
+        document.getElementById('c-primer').hidden = false;
+      } else document.getElementById('c-primer').hidden = true;
+      cItems.innerHTML = c.map(function (x, i) {
+        return '<li><img src="' + x.img + '" alt=""><div><h3>' + x.n + '</h3><p>' + (x.iz || '') + '</p><p>' + (x.d === 'porudzbina' ? 'Po porudžbini, oko 3 nedelje' : 'Na stanju, 2–3 dana') + '</p><button type="button" class="rm" data-i="' + i + '"' + (x.primer ? ' data-primer="1"' : '') + '>Ukloni</button></div><b>' + x.c + '</b></li>';
+      }).join('');
+      var sum = c.reduce(function (a, x) { return a + cnum(x.c); }, 0);
+      document.getElementById('c-sum').innerHTML = c.length ? '<div><span>Proizvodi</span><span>' + fmt(sum) + '</span></div><div><span>Dostava</span><span>' + (sum >= 4000 ? 'besplatna' : 'po ceni kurirske službe') + '</span></div><div class="tot"><span>Ukupno</span><span>' + fmt(sum) + '</span></div>' : '';
+      document.getElementById('c-prazno').hidden = c.length > 0;
+      document.getElementById('c-form').hidden = c.length === 0;
+      // Pouzeće samo kad je sve na stanju (logika korpe 11.11.2026)
+      var svePoStanju = c.every(function (x) { return x.d !== 'porudzbina'; });
+      var lp = document.getElementById('pay-pouzece'), ip = lp.querySelector('input');
+      ip.disabled = !svePoStanju; lp.classList.toggle('off', !svePoStanju);
+      lp.querySelector('small').textContent = svePoStanju ? 'Plaćate kuriru gotovinom kad paket stigne.' : 'Nije moguće: u korpi je komad koji se šije po porudžbini, on se plaća unapred.';
+      if (!svePoStanju && ip.checked) ip.checked = false;
+    };
+    drawCart();
+    cItems.addEventListener('click', function (e) {
+      var b = e.target.closest('.rm'); if (!b) return;
+      if (b.dataset.primer) { primer = true; cItems.innerHTML = ''; document.getElementById('c-primer').hidden = true; document.getElementById('c-sum').innerHTML = ''; document.getElementById('c-prazno').hidden = false; document.getElementById('c-form').hidden = true; return; }
+      var c = readCart(); c.splice(+b.dataset.i, 1); saveCart(c); drawCart();
+    });
+    var cf = document.getElementById('c-form');
+    cf.addEventListener('change', function (e) {
+      if (e.target.name === 'placanje') {
+        document.getElementById('e-c-pay').textContent = '';
+        document.getElementById('c-email-opt').textContent = e.target.value === 'kartica' ? '(obavezan za plaćanje karticom)' : '(nije obavezan)';
+      }
+    });
+    cf.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var ok = true, first = null;
+      var chk = function (id, msg) {
+        var el = document.getElementById(id), er = document.getElementById('e-' + id);
+        var bad = msg(el.value.trim());
+        er.textContent = bad || ''; el.setAttribute('aria-invalid', bad ? 'true' : 'false');
+        if (bad) { ok = false; first = first || el; }
+      };
+      chk('c-ime', function (v) { return v.length < 3 ? 'Upišite ime i prezime.' : ''; });
+      chk('c-tel', function (v) { return v.replace(/\D/g, '').length < 8 ? 'Upišite broj telefona, npr. 064 123 4567.' : ''; });
+      chk('c-adr', function (v) { return v.length < 3 ? 'Upišite ulicu i broj.' : ''; });
+      chk('c-mesto', function (v) { return v.length < 2 ? 'Upišite mesto.' : ''; });
+      chk('c-pb', function (v) { return !/^\d{5}$/.test(v.replace(/\s/g, '')) ? 'Poštanski broj ima 5 cifara, npr. 11000.' : ''; });
+      var pay = cf.querySelector('input[name="placanje"]:checked');
+      chk('c-email', function (v) { if (pay && pay.value === 'kartica' && !v) return 'Za plaćanje karticom upišite email, na njega šaljemo link.'; return v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'Proverite email adresu.' : ''; });
+      var ep = document.getElementById('e-c-pay');
+      if (!pay) { ep.textContent = 'Izaberite način plaćanja.'; ok = false; first = first || cf.querySelector('input[name="placanje"]:not(:disabled)'); } else ep.textContent = '';
+      var st = document.getElementById('c-status');
+      st.hidden = false;
+      if (!ok) { st.className = 'status bad f-wide'; st.textContent = 'Proverite označena polja.'; if (first) first.focus(); return; }
+      st.className = 'status ok f-wide';
+      st.textContent = 'Hvala! Ovo je pregled novog sajta, pa porudžbina nije poslata. Na pravom sajtu dobili biste potvrdu porudžbine' + (pay.value === 'pouzece' ? ' i paket plaćate kuriru.' : pay.value === 'racun' ? ' i podatke za uplatu.' : ' i link za plaćanje karticom na email.');
+      st.focus();
+    });
+  }
 
   // Contact form: validation only
   var form = document.getElementById('kontakt-forma');
